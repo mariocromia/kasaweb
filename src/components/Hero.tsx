@@ -1,7 +1,6 @@
 import { motion } from 'motion/react';
 import { ArrowRight } from 'lucide-react';
 import { useContactModal } from '../contexts/ContactModalContext';
-import RealisticBuilder from './RealisticBuilder';
 
 export default function Hero() {
   const { openModal } = useContactModal();
@@ -68,10 +67,59 @@ export default function Hero() {
           </motion.p>
         </motion.div>
 
-        {/* Visual Composition: Realistic LP Assembly */}
-        <div className="relative h-[400px] md:h-[500px] lg:h-[600px] w-full flex items-center justify-center mt-8 lg:mt-0">
-          <RealisticBuilder />
-        </div>
+        {/* Visual Composition: Hero Image with Effects */}
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1, transition: { duration: 0.8, ease: 'easeOut' } }}
+          className="relative h-[400px] md:h-[500px] lg:h-[600px] w-full flex items-center justify-center mt-8 lg:mt-0 perspective-[1000px]"
+        >
+          {/* Animated Glow Behind Image */}
+          <div className="absolute inset-0 bg-gradient-to-tr from-brand-600/30 to-accent-500/30 rounded-3xl blur-3xl animate-pulse" />
+          
+          {/* Image Container with Mask and Tilt */}
+          <motion.div 
+            className="relative w-full max-w-lg lg:max-w-xl rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-white/5 backdrop-blur-sm"
+            style={{ 
+              maskImage: 'linear-gradient(to bottom, rgba(0,0,0,1) 85%, rgba(0,0,0,0) 100%)',
+              WebkitMaskImage: 'linear-gradient(to bottom, rgba(0,0,0,1) 85%, rgba(0,0,0,0) 100%)'
+            }}
+            whileHover={{ scale: 1.02, rotateY: -2, rotateX: 2 }}
+            transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+          >
+            <img 
+              src="/hero01.JPG" 
+              alt="Resultados de Alta Performance" 
+              className="w-full h-auto object-cover relative z-10"
+            />
+
+            {/* Animated Arrow Overlay (Positioned over the cell phone graph) */}
+            {/* The exact top/left values may need adjustment based on the image content */}
+            <div className="absolute top-[66%] left-[19%] z-20 flex flex-col items-center justify-center transform -translate-x-1/2 -translate-y-1/2 pointer-events-none">
+              <span className="absolute w-12 h-12 bg-accent-400 rounded-full animate-ping opacity-50 mix-blend-screen" />
+              <motion.div
+                animate={{ y: [0, -15, 0], opacity: [0.5, 1, 0.5] }}
+                transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
+                className="text-accent-400 drop-shadow-[0_0_15px_rgba(16,185,129,1)] relative z-10"
+              >
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M12 19V5M5 12l7-7 7 7"/>
+                </svg>
+              </motion.div>
+            </div>
+            
+            {/* Additional floating particle effect near the graph */}
+            <motion.div
+               animate={{ y: [0, -25], opacity: [0, 1, 0], scale: [0.5, 1.5, 0.5] }}
+               transition={{ duration: 2, repeat: Infinity, delay: 0.5, ease: 'easeOut' }}
+               className="absolute top-[72%] left-[15%] w-2 h-2 rounded-full bg-accent-300 shadow-[0_0_10px_rgba(16,185,129,0.8)] z-20 pointer-events-none"
+            />
+            <motion.div
+               animate={{ y: [0, -35], opacity: [0, 1, 0], scale: [0.5, 1, 0.5] }}
+               transition={{ duration: 2.5, repeat: Infinity, delay: 1.2, ease: 'easeOut' }}
+               className="absolute top-[75%] left-[22%] w-1.5 h-1.5 rounded-full bg-accent-200 shadow-[0_0_8px_rgba(16,185,129,0.8)] z-20 pointer-events-none"
+            />
+          </motion.div>
+        </motion.div>
       </div>
     </section>
   );
