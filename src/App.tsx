@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { ContactModalProvider } from './contexts/ContactModalContext';
 import Navbar from './components/Navbar';
@@ -15,8 +16,11 @@ import CTA from './components/CTA';
 import Footer from './components/Footer';
 import WhatsAppButton from './components/WhatsAppButton';
 import ContactModal from './components/ContactModal';
+import Dashboard from './components/Dashboard';
+import { useTracker } from './hooks/useTracker';
 
-export default function App() {
+function MainApp() {
+  useTracker();
   return (
     <ThemeProvider>
       <ContactModalProvider>
@@ -42,4 +46,14 @@ export default function App() {
       </ContactModalProvider>
     </ThemeProvider>
   );
+}
+
+export default function App() {
+  const path = window.location.pathname;
+
+  if (path === '/3382') {
+    return <Dashboard />;
+  }
+
+  return <MainApp />;
 }

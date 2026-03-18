@@ -35,6 +35,7 @@ export default function CTA() {
             <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto mt-4">
               <button
                 onClick={openModal}
+                data-track="11. Quero agendar meu raio-x estratégico grátis"
                 className="group relative px-8 py-5 bg-white text-black rounded-xl font-bold text-base md:text-lg overflow-hidden flex items-center justify-center gap-2 transition-transform hover:scale-105 active:scale-95 shadow-[0_0_20px_rgba(255,255,255,0.3)]"
               >
                 <span className="relative z-10 flex flex-col leading-tight">
@@ -49,6 +50,7 @@ export default function CTA() {
                 href="https://wa.me/5521960154135"
                 target="_blank"
                 rel="noreferrer"
+                data-track="12. Destravar minha empresa no WhatsApp"
                 className="px-8 py-5 bg-white/5 hover:bg-white/10 border border-white/10 text-white rounded-xl font-bold text-base md:text-lg flex items-center justify-center gap-2 transition-all hover:scale-105 active:scale-95 backdrop-blur-md"
               >
                 <MessageCircle className="w-5 h-5 text-accent-400 flex-shrink-0" />

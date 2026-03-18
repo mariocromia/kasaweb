@@ -77,6 +77,7 @@ export default function Navbar() {
           <ThemeToggle />
           <button
             onClick={openModal}
+            data-track="1. Falar com especialista"
             className="px-5 py-2.5 rounded-full bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 border border-gray-200 dark:border-white/10 text-sm font-medium text-gray-900 dark:text-white transition-all hover:scale-105 active:scale-95"
           >
             Falar com especialista
@@ -118,6 +119,7 @@ export default function Navbar() {
               openModal();
               setIsMobileMenuOpen(false);
             }}
+            data-track="2. Solicitar orçamento"
             className="mt-4 px-6 py-3 rounded-xl bg-gradient-to-r from-brand-600 to-brand-500 text-center font-medium text-white"
           >
             Solicitar orçamento

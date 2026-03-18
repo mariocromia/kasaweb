@@ -88,7 +88,7 @@ export default function Hero() {
               <ArrowRight className="w-4 h-4 md:w-5 md:h-5 relative z-10 group-hover:translate-x-1 transition-transform" />
               <div className="absolute inset-0 bg-gradient-to-r from-brand-500 to-brand-600 dark:from-gray-200 dark:to-white opacity-0 group-hover:opacity-100 transition-opacity" />
             </button>
-            <a href="https://wa.me/5521960154135" target="_blank" rel="noreferrer" className="w-full sm:w-auto px-6 py-3.5 md:px-8 md:py-4 bg-white/90 dark:bg-black/50 hover:bg-white dark:hover:bg-black/70 border border-gray-200 dark:border-white/20 text-gray-900 dark:text-white rounded-xl font-semibold text-base md:text-lg flex items-center justify-center gap-2 transition-all hover:scale-105 active:scale-95 backdrop-blur-md shadow-sm">
+            <a href="https://wa.me/5521960154135" target="_blank" rel="noreferrer" data-track="3. Falar no WhatsApp" className="w-full sm:w-auto px-6 py-3.5 md:px-8 md:py-4 bg-white/90 dark:bg-black/50 hover:bg-white dark:hover:bg-black/70 border border-gray-200 dark:border-white/20 text-gray-900 dark:text-white rounded-xl font-semibold text-base md:text-lg flex items-center justify-center gap-2 transition-all hover:scale-105 active:scale-95 backdrop-blur-md shadow-sm">
               Falar no WhatsApp
             </a>
           </motion.div>
