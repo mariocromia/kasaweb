@@ -1,5 +1,6 @@
 import { motion } from 'motion/react';
 import { Globe, MousePointerClick, Database, Wrench } from 'lucide-react';
+import MobileExpandableText from './MobileExpandableText';
 
 export default function Services() {
   const services = [
@@ -94,9 +95,11 @@ export default function Services() {
                 <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-brand-500 group-hover:to-accent-500 dark:group-hover:from-brand-300 dark:group-hover:to-accent-300 transition-colors duration-300">
                   {service.title}
                 </h3>
-                <p className="text-lg text-gray-700 dark:text-gray-400 leading-relaxed">
-                  {service.description}
-                </p>
+                <MobileExpandableText 
+                  text={service.description} 
+                  className="text-lg text-gray-700 dark:text-gray-400 leading-relaxed" 
+                  lines={4} 
+                />
               </div>
 
               {/* Decorative elements */}

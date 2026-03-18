@@ -2,6 +2,7 @@ import { motion, useScroll, useTransform } from 'motion/react';
 import { useRef } from 'react';
 import { ArrowUpRight } from 'lucide-react';
 import { useContactModal } from '../contexts/ContactModalContext';
+import MobileExpandableText from './MobileExpandableText';
 
 const projects = [
   {
@@ -74,9 +75,11 @@ const Card = ({ project, index, progress, range, targetScale }: any) => {
         <div className="relative z-10 flex flex-col md:flex-row gap-0 md:gap-8 items-center justify-between w-full h-full">
           <div className="flex-1 flex flex-col justify-center p-8 md:p-0">
             <h3 className="text-2xl sm:text-3xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4 md:mb-6">{project.title}</h3>
-            <p className="text-base sm:text-lg md:text-xl text-gray-600 dark:text-gray-400 leading-relaxed mb-6 md:mb-10 max-w-xl">
-              {project.description}
-            </p>
+            <MobileExpandableText 
+              text={project.description} 
+              className="text-base sm:text-lg md:text-xl text-gray-600 dark:text-gray-400 leading-relaxed mb-6 md:mb-10 max-w-xl" 
+              lines={3} 
+            />
             <div className="mt-4 md:mt-0">
               {isLast ? (
                 <button

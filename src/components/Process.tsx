@@ -1,5 +1,6 @@
 import { motion, useScroll, useTransform } from 'motion/react';
 import { useRef } from 'react';
+import MobileExpandableText from './MobileExpandableText';
 
 export default function Process() {
   const steps = [
@@ -101,7 +102,11 @@ export default function Process() {
                         {step.number}
                       </span>
                       <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-3 relative z-10">{step.title}</h3>
-                      <p className="text-gray-600 dark:text-gray-400 leading-relaxed relative z-10">{step.description}</p>
+                      <MobileExpandableText 
+                        text={step.description} 
+                        className="text-gray-600 dark:text-gray-400 leading-relaxed relative z-10" 
+                        lines={4} 
+                      />
                     </div>
                   </motion.div>
                 </div>
