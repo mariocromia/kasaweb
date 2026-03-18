@@ -5,18 +5,21 @@ const router = express.Router();
 
 // Middleware para garantir que res.status e res.json funcionem mesmo no Connect do Vite
 router.use((req: any, res: any, next) => {
-  if (!res.status) {
-    res.status = (code: number) => {
-      res.statusCode = code;
-      return res;
-    };
-  }
-  if (!res.json) {
-    res.json = (data: any) => {
-      res.setHeader('Content-Type', 'application/json');
-      res.end(JSON.stringify(data));
-      return res;
-    };
+  const isExpress = typeof res.status === 'function' && res.app;
+  if (!isExpress) {
+    if (!res.status) {
+      res.status = (code: number) => {
+        res.statusCode = code;
+        return res;
+      };
+    }
+    if (!res.json) {
+      res.json = (data: any) => {
+        res.setHeader('Content-Type', 'application/json');
+        res.end(JSON.stringify(data));
+        return res;
+      };
+    }
   }
   next();
 });

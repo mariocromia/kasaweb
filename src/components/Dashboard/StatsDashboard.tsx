@@ -127,7 +127,19 @@ export default function StatsDashboard({ password, onLogout }: Props) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ password, startDate, endDate }),
       });
-      if (!resp.ok) throw new Error('Erro ao buscar dados');
+      
+      const contentType = resp.headers.get('content-type');
+      if (!contentType || !contentType.includes('application/json')) {
+        const text = await resp.text();
+        console.error('Resposta não é JSON:', text.slice(0, 200));
+        throw new Error('O servidor retornou HTML em vez de JSON. Verifique se o server.js está rodando ou se há erro de rota no host.');
+      }
+
+      if (!resp.ok) {
+        const errData = await resp.json();
+        throw new Error(errData.error || 'Erro ao buscar dados');
+      }
+
       const data = await resp.json();
       setStats(data.stats);
     } catch (e: any) {
@@ -198,7 +210,10 @@ export default function StatsDashboard({ password, onLogout }: Props) {
       <style>{`@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }`}</style>
       {/* Header */}
       <div style={st.header}>
-        <h1 style={st.title}>📊 Analytics Dashboard</h1>
+        <div style={{ display: 'flex', alignItems: 'baseline', gap: '12px' }}>
+          <h1 style={st.title}>📊 Analytics Dashboard</h1>
+          <span style={{ fontSize: '11px', color: 'rgba(255,255,255,0.3)', fontWeight: '500' }}>v01.03 - Criação do analytics Dashboard</span>
+        </div>
         <div style={{ display: 'flex', gap: '8px' }}>
           <button style={{ ...st.btnIcon, color: '#ef4444' }} onClick={handleReset} title="Resetar Tudo">
             <Trash2 size={16} />
