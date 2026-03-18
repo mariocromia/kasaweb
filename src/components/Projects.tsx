@@ -33,6 +33,15 @@ const projects = [
     url: 'https://sindgestor.aprendendoaqui.com'
   },
   {
+    title: 'Centro Service',
+    description: 'Plataforma otimizada para serviços de conserto e manutenção de ar-condicionado e geladeira, focada em conversão, agilidade no atendimento e em transmitir confiança ao cliente.',
+    buttonText: 'Acessar projeto',
+    color: 'from-sky-500/20 to-blue-500/20',
+    borderColor: 'border-sky-500/30',
+    image: '/centroservice.JPG',
+    url: 'https://centroservice.com.br'
+  },
+  {
     title: 'NetSacolas',
     description: 'E-commerce especializado em embalagens personalizadas, unindo design premium, facilidade de compra e uma vitrine digital de alta autoridade.',
     buttonText: 'Acessar projeto',
