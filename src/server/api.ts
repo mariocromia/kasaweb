@@ -103,11 +103,19 @@ router.post('/stats', (req: any, res: any) => {
       };
     }
 
-    // Coletar estatísticas do arquivo JSON filtrado
+    // Helper para ajustar para o fuso de Brasília (UTC-3)
+    const getBRDate = (date: Date | string) => {
+      const d = new Date(date);
+      return new Date(d.getTime() - 3 * 60 * 60 * 1000);
+    };
+
     const totalVisits = data.visits.length;
     
-    const todayStr = new Date().toISOString().split('T')[0];
-    const todayVisits = data.visits.filter((v: any) => v.timestamp?.startsWith(todayStr)).length;
+    const todayStr = getBRDate(new Date()).toISOString().split('T')[0];
+    const todayVisits = data.visits.filter((v: any) => {
+      const brDate = getBRDate(v.timestamp);
+      return brDate.toISOString().startsWith(todayStr);
+    }).length;
     
     const totalClicks = data.clicks.length;
     
@@ -140,20 +148,22 @@ router.post('/stats', (req: any, res: any) => {
       .sort((a: any, b: any) => b.count - a.count)
       .slice(0, 50);
     
-    // Visitas por dia
+    // Visitas por dia (ajustado para BR)
     const dayCounts: Record<string, number> = {};
     data.visits.forEach((v: any) => {
-      const day = v.timestamp?.split('T')[0];
+      const brDate = getBRDate(v.timestamp);
+      const day = brDate.toISOString().split('T')[0];
       if (day) dayCounts[day] = (dayCounts[day] || 0) + 1;
     });
     const visitsByDay = Object.entries(dayCounts)
       .map(([date, count]) => ({ date, count }))
       .sort((a, b) => a.date.localeCompare(b.date));
     
-    // Visitas por hora do dia
+    // Visitas por hora do dia (ajustado para BR)
     const hourCounts: Record<string, number> = {};
     data.visits.forEach((v: any) => {
-      const hour = v.timestamp?.split('T')[1]?.split(':')[0];
+      const brDate = getBRDate(v.timestamp);
+      const hour = brDate.toISOString().split('T')[1]?.split(':')[0];
       if (hour) hourCounts[hour] = (hourCounts[hour] || 0) + 1;
     });
     const visitsByHour = Object.entries(hourCounts)

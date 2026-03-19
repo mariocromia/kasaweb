@@ -63,8 +63,14 @@ app.post(['/api/stats', '/stats'], (req, res) => {
       totalClicks: data.clicks.length,
       visitorsByIp: Object.entries(data.visits.reduce((acc, v) => { acc[v.ip] = (acc[v.ip] || 0) + 1; return acc; }, {})).map(([ip, count]) => ({ ip, count })).sort((a,b) => b.count - a.count).slice(0, 50),
       topClicks: Object.values(data.clicks.reduce((acc, c) => { const k = `${c.elementText}|${c.elementTag}`; if(!acc[k]) acc[k] = { element_text: c.elementText, element_tag: c.elementTag, path: c.path, count: 0 }; acc[k].count++; return acc; }, {})).sort((a,b) => b.count - a.count).slice(0, 50),
-      visitsByDay: Object.entries(data.visits.reduce((acc, v) => { const d = v.timestamp?.split('T')[0]; if(d) acc[d] = (acc[d] || 0) + 1; return acc; }, {})).map(([date, count]) => ({ date, count })).sort((a,b) => a.date.localeCompare(b.date)),
-      visitsByHour: Object.entries(data.visits.reduce((acc, v) => { const h = v.timestamp?.split('T')[1]?.split(':')[0]; if(h) acc[h] = (acc[h] || 0) + 1; return acc; }, {})).map(([hour, count]) => ({ hour, count })).sort((a,b) => a.hour.localeCompare(b.hour)),
+      visitsByDay: Object.entries(data.visits.reduce((acc, v) => { 
+        const d = new Date(v.timestamp).toLocaleDateString('en-CA', { timeZone: 'America/Sao_Paulo' });
+        if(d) acc[d] = (acc[d] || 0) + 1; return acc; 
+      }, {})).map(([date, count]) => ({ date, count })).sort((a,b) => a.date.localeCompare(b.date)),
+      visitsByHour: Object.entries(data.visits.reduce((acc, v) => { 
+        const h = new Date(v.timestamp).toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', timeZone: 'America/Sao_Paulo' });
+        if(h) acc[h] = (acc[h] || 0) + 1; return acc; 
+      }, {})).map(([hour, count]) => ({ hour, count })).sort((a,b) => a.hour.localeCompare(b.hour)),
       referrers: Object.entries(data.visits.reduce((acc, v) => { if(v.source) acc[v.source] = (acc[v.source] || 0) + 1; return acc; }, {})).map(([source, count]) => ({ source, count, referrer: '' })).sort((a,b) => b.count - a.count)
     };
     res.json({ success: true, stats });

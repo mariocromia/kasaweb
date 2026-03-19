@@ -233,7 +233,7 @@ export default function StatsDashboard({ password, onLogout }: Props) {
       <div style={st.header}>
         <div style={{ display: 'flex', alignItems: 'baseline', gap: '12px' }}>
           <h1 style={st.title}>📊 Analytics Dashboard</h1>
-          <span style={{ fontSize: '11px', color: 'rgba(255,255,255,0.3)', fontWeight: '500' }}>v01.05 - Ajuste de Timezone (Brasil)</span>
+          <span style={{ fontSize: '11px', color: 'rgba(255,255,255,0.3)', fontWeight: '500' }}>v01.06 - Ajuste de Timezone (Brasil)</span>
         </div>
         <div style={{ display: 'flex', gap: '8px' }}>
           <button style={{ ...st.btnIcon, color: '#ef4444' }} onClick={handleReset} title="Resetar Tudo">
@@ -347,7 +347,7 @@ export default function StatsDashboard({ password, onLogout }: Props) {
             ) : <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: '13px' }}>Sem dados ainda.</p>}
           </div>
           <div style={st.card}>
-            <p style={st.sectionTitle}><Clock size={14} style={{ display: 'inline', marginRight: '6px', verticalAlign: 'middle' }} />Horário de Pico (UTC)</p>
+            <p style={st.sectionTitle}><Clock size={14} style={{ display: 'inline', marginRight: '6px', verticalAlign: 'middle' }} />Horário de Pico (Brasil)</p>
             {stats.visitsByHour.length > 0 ? (
               <>
                 <HourChart data={stats.visitsByHour} />
