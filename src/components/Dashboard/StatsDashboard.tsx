@@ -121,32 +121,53 @@ export default function StatsDashboard({ password, onLogout }: Props) {
       if (activeRange.end) endDate = new Date(activeRange.end).toISOString();
     }
 
-    try {
-      const resp = await fetch('/api/stats', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password, startDate, endDate }),
-      });
-      
-      const contentType = resp.headers.get('content-type');
-      if (!contentType || !contentType.includes('application/json')) {
-        const text = await resp.text();
-        console.error('Resposta não é JSON:', text.slice(0, 200));
-        throw new Error('O servidor retornou HTML em vez de JSON. Verifique se o server.js está rodando ou se há erro de rota no host.');
-      }
+    const urls = ['/api/stats', '/stats'];
+    let lastError = null;
 
-      if (!resp.ok) {
-        const errData = await resp.json();
-        throw new Error(errData.error || 'Erro ao buscar dados');
-      }
+    for (const url of urls) {
+      try {
+        console.log(`[Dashboard] Tentando buscar stats em: ${url}`);
+        const resp = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password, startDate, endDate }),
+        });
+        
+        const contentType = resp.headers.get('content-type');
+        if (!contentType || !contentType.includes('application/json')) {
+          const text = await resp.text();
+          console.error(`Resposta não é JSON de ${url}:`, text.slice(0, 200));
+          throw new Error(`O servidor em ${url} não retornou JSON.`);
+        }
 
-      const data = await resp.json();
-      setStats(data.stats);
-    } catch (e: any) {
-      setError(e.message);
-    } finally {
-      setLoading(false);
+        if (!resp.ok) {
+          let errorMsg = 'Erro ao buscar dados';
+          try {
+            const errData = await resp.json();
+            errorMsg = typeof errData.error === 'object' ? JSON.stringify(errData.error) : (errData.error || errorMsg);
+          } catch (parseErr) {
+            errorMsg = `Erro ${resp.status}: ${resp.statusText}`;
+          }
+          throw new Error(errorMsg);
+        }
+
+        const data = await resp.json();
+        setStats(data.stats);
+        setLoading(false);
+        return; // Sucesso!
+      } catch (e: any) {
+        console.warn(`[Dashboard] Falha ao tentar ${url}:`, e.message);
+        lastError = e;
+        // Se for 404, tenta a próxima URL. Se for outro erro, ou se as URLs acabarem, joga o erro.
+        if (!e.message.includes('404') && url === urls[0]) break; 
+      }
     }
+
+    if (lastError) {
+      console.error('[Dashboard] Todas as tentativas falharam:', lastError);
+      setError(lastError.message || 'Erro de conexão com o servidor');
+    }
+    setLoading(false);
   };
 
   const handleFilterChange = (newFilter: string) => {
@@ -212,7 +233,7 @@ export default function StatsDashboard({ password, onLogout }: Props) {
       <div style={st.header}>
         <div style={{ display: 'flex', alignItems: 'baseline', gap: '12px' }}>
           <h1 style={st.title}>📊 Analytics Dashboard</h1>
-          <span style={{ fontSize: '11px', color: 'rgba(255,255,255,0.3)', fontWeight: '500' }}>v01.03 - Criação do analytics Dashboard</span>
+          <span style={{ fontSize: '11px', color: 'rgba(255,255,255,0.3)', fontWeight: '500' }}>v01.05 - Ajuste de Timezone (Brasil)</span>
         </div>
         <div style={{ display: 'flex', gap: '8px' }}>
           <button style={{ ...st.btnIcon, color: '#ef4444' }} onClick={handleReset} title="Resetar Tudo">

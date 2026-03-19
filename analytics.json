@@ -26,6 +26,24 @@
       "referrer": "http://localhost:3000/",
       "source": "localhost",
       "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36"
+    },
+    {
+      "id": 1773873058826.0476,
+      "timestamp": "2026-03-18T22:30:58.826Z",
+      "ip": "127.0.0.1",
+      "path": "/",
+      "referrer": null,
+      "source": "direct",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36"
+    },
+    {
+      "id": 1773880298368.1343,
+      "timestamp": "2026-03-19T00:31:38.368Z",
+      "ip": "127.0.0.1",
+      "path": "/",
+      "referrer": null,
+      "source": "direct",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36"
     }
   ],
   "clicks": [

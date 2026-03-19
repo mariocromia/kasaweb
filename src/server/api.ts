@@ -75,6 +75,7 @@ router.post('/track/click', (req: any, res: any) => {
 });
 
 router.post('/stats', (req: any, res: any) => {
+  console.log('[API DEBUG] stats hit');
   try {
     const { password, startDate, endDate } = req.body;
     if (password !== '33822912') {
@@ -192,6 +193,7 @@ router.post('/stats', (req: any, res: any) => {
 });
 
 router.post('/stats/reset', (req: any, res: any) => {
+  console.log('[API DEBUG] stats/reset hit');
   try {
     const { password } = req.body;
     if (password !== '33822912') {
