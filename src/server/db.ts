@@ -7,11 +7,13 @@ const dbPath = path.resolve(process.cwd(), 'analytics.json');
 interface DbSchema {
   visits: any[];
   clicks: any[];
+  blockedIps: string[];
 }
 
 const initialDb: DbSchema = {
   visits: [],
   clicks: [],
+  blockedIps: [],
 };
 
 // Função para ler o banco
@@ -39,9 +41,9 @@ function writeDb(data: DbSchema) {
 }
 
 const db = {
-  getCollection: (name: 'visits' | 'clicks') => {
+  getCollection: (name: 'visits' | 'clicks' | 'blockedIps') => {
     const fullDb = readDb();
-    return fullDb[name];
+    return fullDb[name] || [];
   },
   insert: (name: 'visits' | 'clicks', item: any) => {
     const fullDb = readDb();
@@ -53,6 +55,20 @@ const db = {
     fullDb[name].push(newItem);
     writeDb(fullDb);
     return newItem;
+  },
+  isIpBlocked: (ip: string) => {
+    const fullDb = readDb();
+    if (!fullDb.blockedIps) return false;
+    return fullDb.blockedIps.includes(ip);
+  },
+  blockIp: (ip: string) => {
+    const fullDb = readDb();
+    if (!fullDb.blockedIps) fullDb.blockedIps = [];
+    if (!fullDb.blockedIps.includes(ip)) {
+      fullDb.blockedIps.push(ip);
+      writeDb(fullDb);
+      console.log(`[DB] IP Bloqueado: ${ip}`);
+    }
   },
   // Helpers para estatísticas básicos
   stats: () => {

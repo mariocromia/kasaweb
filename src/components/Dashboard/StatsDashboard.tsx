@@ -233,7 +233,7 @@ export default function StatsDashboard({ password, onLogout }: Props) {
       <div style={st.header}>
         <div style={{ display: 'flex', alignItems: 'baseline', gap: '12px' }}>
           <h1 style={st.title}>📊 Analytics Dashboard</h1>
-          <span style={{ fontSize: '11px', color: 'rgba(255,255,255,0.3)', fontWeight: '500' }}>v01.06 - Ajuste de Timezone (Brasil)</span>
+          <span style={{ fontSize: '11px', color: 'rgba(255,255,255,0.3)', fontWeight: '500' }}>v01.07 - Direct Form & Success Page & IP Block</span>
         </div>
         <div style={{ display: 'flex', gap: '8px' }}>
           <button style={{ ...st.btnIcon, color: '#ef4444' }} onClick={handleReset} title="Resetar Tudo">

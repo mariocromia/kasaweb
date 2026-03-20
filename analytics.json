@@ -1,71 +1,7 @@
 {
-  "visits": [
-    {
-      "id": 1773863359299.9592,
-      "timestamp": "2026-03-18T19:49:19.299Z",
-      "ip": "127.0.0.1",
-      "path": "/",
-      "referrer": null,
-      "source": "direct",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36"
-    },
-    {
-      "id": 1773863507594.412,
-      "timestamp": "2026-03-18T19:51:47.594Z",
-      "ip": "127.0.0.1",
-      "path": "/",
-      "referrer": "http://localhost:3000/",
-      "source": "localhost",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36"
-    },
-    {
-      "id": 1773864179926.774,
-      "timestamp": "2026-03-18T20:02:59.926Z",
-      "ip": "::1",
-      "path": "/",
-      "referrer": "http://localhost:3000/",
-      "source": "localhost",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36"
-    },
-    {
-      "id": 1773873058826.0476,
-      "timestamp": "2026-03-18T22:30:58.826Z",
-      "ip": "127.0.0.1",
-      "path": "/",
-      "referrer": null,
-      "source": "direct",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36"
-    },
-    {
-      "id": 1773880298368.1343,
-      "timestamp": "2026-03-19T00:31:38.368Z",
-      "ip": "127.0.0.1",
-      "path": "/",
-      "referrer": null,
-      "source": "direct",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36"
-    }
-  ],
-  "clicks": [
-    {
-      "id": 1773864199474.8977,
-      "timestamp": "2026-03-18T20:03:19.474Z",
-      "ip": "::1",
-      "path": "/",
-      "elementText": "Solicitar orçamento",
-      "elementTag": "span",
-      "x": 636,
-      "y": 560
-    },
-    {
-      "id": 1773864213235.1296,
-      "timestamp": "2026-03-18T20:03:33.235Z",
-      "ip": "::1",
-      "path": "/",
-      "elementText": "1. Falar com especialista",
-      "elementTag": "button",
-      "x": 1266,
-      "y": 28
-    }
+  "visits": [],
+  "clicks": [],
+  "blockedIps": [
+    "127.0.0.1"
   ]
 }

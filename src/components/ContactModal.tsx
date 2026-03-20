@@ -7,22 +7,80 @@ export default function ContactModal() {
   const { isOpen, closeModal } = useContactModal();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [emailError, setEmailError] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let value = e.target.value.replace(/\D/g, '');
+    if (value.length > 11) value = value.slice(0, 11);
+    
+    // Applying mask (00) 0000-0000 or (00) 00000-0000
+    if (value.length <= 2) {
+      setPhoneNumber(value);
+    } else if (value.length <= 6) {
+      setPhoneNumber(`(${value.slice(0, 2)}) ${value.slice(2)}`);
+    } else if (value.length <= 10) {
+      setPhoneNumber(`(${value.slice(0, 2)}) ${value.slice(2, 6)}-${value.slice(6)}`);
+    } else {
+      setPhoneNumber(`(${value.slice(0, 2)}) ${value.slice(2, 7)}-${value.slice(7)}`);
+    }
+  };
+
+  const handleEmailBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    if (value && !value.includes('@')) {
+      setEmailError(true);
+    } else {
+      setEmailError(false);
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simulate an API call
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setIsSuccess(true);
+    const form = e.target as HTMLFormElement;
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData.entries());
 
-      // Close modal after success message
-      setTimeout(() => {
-        setIsSuccess(false);
-        closeModal();
-      }, 2500);
-    }, 1500);
+    // Basic Validation
+    if (!data.email.toString().includes('@')) {
+      setEmailError(true);
+      setIsSubmitting(false);
+      return;
+    }
+
+    const phoneDigits = phoneNumber.replace(/\D/g, '');
+    if (phoneDigits.length < 10) {
+      alert('Por favor, insira um número de telefone válido (com DDD).');
+      setIsSubmitting(false);
+      return;
+    }
+
+    try {
+      const response = await fetch('https://formsubmit.co/ajax/contato.kasaweb@gmail.com', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify(data)
+      });
+
+      if (response.ok) {
+        setIsSubmitting(false);
+        setIsSuccess(true);
+        setTimeout(() => {
+          window.location.href = '/form';
+        }, 1000);
+      } else {
+        throw new Error('Form submission failed');
+      }
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      setIsSubmitting(false);
+      alert('Ocorreu um erro ao enviar sua mensagem. Por favor, tente novamente ou entre em contato pelo WhatsApp.');
+    }
   };
 
   return (
@@ -78,11 +136,12 @@ export default function ContactModal() {
 
                   <form onSubmit={handleSubmit} className="space-y-5">
                     <div>
-                      <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Nome completo</label>
+                      <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Nome</label>
                       <input
                         required
                         type="text"
                         id="name"
+                        name="name"
                         className="w-full px-4 py-3.5 rounded-xl bg-gray-100 dark:bg-white/5 border border-gray-200 dark:border-white/10 focus:ring-2 focus:ring-brand-500 outline-none transition-all dark:text-white"
                         placeholder="Como devemos te chamar?"
                       />
@@ -90,12 +149,18 @@ export default function ContactModal() {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                       <div>
-                        <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">E-mail</label>
+                        <div className="flex justify-between items-center mb-1.5">
+                          <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300">E-mail</label>
+                          {emailError && <span className="text-xs text-red-500 font-medium">E-mail inválido</span>}
+                        </div>
                         <input
                           required
                           type="email"
                           id="email"
-                          className="w-full px-4 py-3.5 rounded-xl bg-gray-100 dark:bg-white/5 border border-gray-200 dark:border-white/10 focus:ring-2 focus:ring-brand-500 outline-none transition-all dark:text-white"
+                          name="email"
+                          onBlur={handleEmailBlur}
+                          onChange={() => emailError && setEmailError(false)}
+                          className={`w-full px-4 py-3.5 rounded-xl bg-gray-100 dark:bg-white/5 border ${emailError ? 'border-red-500 focus:ring-red-500' : 'border-gray-200 dark:border-white/10 focus:ring-2 focus:ring-brand-500'} outline-none transition-all dark:text-white`}
                           placeholder="seu@email.com"
                         />
                       </div>
@@ -105,6 +170,9 @@ export default function ContactModal() {
                           required
                           type="tel"
                           id="phone"
+                          name="phone"
+                          value={phoneNumber}
+                          onChange={handlePhoneChange}
                           className="w-full px-4 py-3.5 rounded-xl bg-gray-100 dark:bg-white/5 border border-gray-200 dark:border-white/10 focus:ring-2 focus:ring-brand-500 outline-none transition-all dark:text-white"
                           placeholder="(00) 00000-0000"
                         />
@@ -116,6 +184,7 @@ export default function ContactModal() {
                       <textarea
                         required
                         id="message"
+                        name="message"
                         rows={4}
                         className="w-full px-4 py-3.5 rounded-xl bg-gray-100 dark:bg-white/5 border border-gray-200 dark:border-white/10 focus:ring-2 focus:ring-brand-500 outline-none transition-all resize-none dark:text-white"
                         placeholder="Conte-nos um pouco sobre a sua necessidade ou ideia..."

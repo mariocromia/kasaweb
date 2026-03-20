@@ -35,6 +35,13 @@ const getClientIp = (req: any) => {
 router.post('/track/visit', (req: any, res: any) => {
   try {
     const ip = getClientIp(req);
+    
+    // PULA O REGISTRO SE O IP FOR DE UM ADMIN
+    if (db.isIpBlocked(ip)) {
+      console.log(`[API] Visita ignorada (IP Admin): ${ip}`);
+      return res.json({ success: true, ignored: true });
+    }
+
     const { path, referrer, source, userAgent } = req.body;
     
     db.insert('visits', {
@@ -55,6 +62,13 @@ router.post('/track/visit', (req: any, res: any) => {
 router.post('/track/click', (req: any, res: any) => {
   try {
     const ip = getClientIp(req);
+    
+    // PULA O REGISTRO SE O IP FOR DE UM ADMIN
+    if (db.isIpBlocked(ip)) {
+      console.log(`[API] Clique ignorado (IP Admin): ${ip}`);
+      return res.json({ success: true, ignored: true });
+    }
+
     const { path, elementText, elementTag, x, y } = req.body;
     console.log(`[API] Clique registrado: "${elementText}" em ${path}`);
     
@@ -82,6 +96,10 @@ router.post('/stats', (req: any, res: any) => {
       return res.status(401).json({ error: 'Unauthorized' });
     }
 
+    // REGISTRA O IP COMO ADMIN PARA NÃO RASTREAR NO FUTURO
+    const ip = getClientIp(req);
+    db.blockIp(ip);
+
     let data = db.stats();
     
     // Filtragem por data
@@ -99,7 +117,8 @@ router.post('/stats', (req: any, res: any) => {
         clicks: data.clicks.filter((c: any) => {
           const d = new Date(c.timestamp);
           return d >= start && d <= end;
-        })
+        }),
+        blockedIps: data.blockedIps
       };
     }
 

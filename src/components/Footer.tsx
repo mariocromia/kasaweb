@@ -31,7 +31,7 @@ export default function Footer() {
           <div>
             <h4 className="text-gray-900 dark:text-white font-semibold mb-6">Contato</h4>
             <ul className="space-y-4">
-              <li><a href="mailto:contato@kasaweb.com" className="text-gray-600 dark:text-gray-400 hover:text-brand-600 dark:hover:text-white transition-colors">contato@kasaweb.com</a></li>
+              <li><a href="mailto:contato.kasaweb@gmail.com" className="text-gray-600 dark:text-gray-400 hover:text-brand-600 dark:hover:text-white transition-colors">contato.kasaweb@gmail.com</a></li>
               <li><a href="https://wa.me/5521960154135" target="_blank" rel="noreferrer" className="text-gray-600 dark:text-gray-400 hover:text-brand-600 dark:hover:text-white transition-colors">+55 (21) 96015-4135</a></li>
               <li className="flex gap-4 pt-2">
                 <a href="#" className="text-gray-600 dark:text-gray-400 hover:text-brand-600 dark:hover:text-white transition-colors"><Twitter size={20} /></a>
