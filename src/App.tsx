@@ -17,43 +17,50 @@ import Footer from './components/Footer';
 import WhatsAppButton from './components/WhatsAppButton';
 import ContactModal from './components/ContactModal';
 import Dashboard from './components/Dashboard';
+import SuccessPage from './components/SuccessPage';
 import { useTracker } from './hooks/useTracker';
 
-function MainApp() {
+function MainAppContent() {
   useTracker();
   return (
-    <ThemeProvider>
-      <ContactModalProvider>
-        <div className="min-h-screen bg-gray-50 dark:bg-[#050505] text-gray-900 dark:text-white selection:bg-brand-500/30 selection:text-brand-900 dark:selection:text-brand-200 transition-colors duration-300">
-          <Navbar />
-          <main>
-            <Hero />
-            <ValueProposition />
-            <Services />
-            <TechStack />
-            <Differentials />
-            <Projects />
-            <Process />
-            <Testimonials />
-            <FAQ />
-            <PaymentBanner />
-            <CTA />
-          </main>
-          <Footer />
-          <WhatsAppButton />
-          <ContactModal />
-        </div>
-      </ContactModalProvider>
-    </ThemeProvider>
+    <>
+      <Navbar />
+      <main>
+        <Hero />
+        <ValueProposition />
+        <Services />
+        <TechStack />
+        <Differentials />
+        <Projects />
+        <Process />
+        <Testimonials />
+        <FAQ />
+        <PaymentBanner />
+        <CTA />
+      </main>
+      <Footer />
+      <WhatsAppButton />
+    </>
   );
 }
 
 export default function App() {
   const path = window.location.pathname;
 
-  if (path === '/3382') {
-    return <Dashboard />;
-  }
-
-  return <MainApp />;
+  return (
+    <ThemeProvider>
+      <ContactModalProvider>
+        <div className="min-h-screen bg-gray-50 dark:bg-[#050505] text-gray-900 dark:text-white selection:bg-brand-500/30 selection:text-brand-900 dark:selection:text-brand-200 transition-colors duration-300">
+          {path === '/3382' ? (
+            <Dashboard />
+          ) : path === '/form' ? (
+            <SuccessPage />
+          ) : (
+            <MainAppContent />
+          )}
+          <ContactModal />
+        </div>
+      </ContactModalProvider>
+    </ThemeProvider>
+  );
 }

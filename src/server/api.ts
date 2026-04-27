@@ -35,6 +35,13 @@ const getClientIp = (req: any) => {
 router.post('/track/visit', (req: any, res: any) => {
   try {
     const ip = getClientIp(req);
+    
+    // PULA O REGISTRO SE O IP FOR DE UM ADMIN
+    if (db.isIpBlocked(ip)) {
+      console.log(`[API] Visita ignorada (IP Admin): ${ip}`);
+      return res.json({ success: true, ignored: true });
+    }
+
     const { path, referrer, source, userAgent } = req.body;
     
     db.insert('visits', {
@@ -55,6 +62,13 @@ router.post('/track/visit', (req: any, res: any) => {
 router.post('/track/click', (req: any, res: any) => {
   try {
     const ip = getClientIp(req);
+    
+    // PULA O REGISTRO SE O IP FOR DE UM ADMIN
+    if (db.isIpBlocked(ip)) {
+      console.log(`[API] Clique ignorado (IP Admin): ${ip}`);
+      return res.json({ success: true, ignored: true });
+    }
+
     const { path, elementText, elementTag, x, y } = req.body;
     console.log(`[API] Clique registrado: "${elementText}" em ${path}`);
     
@@ -75,11 +89,16 @@ router.post('/track/click', (req: any, res: any) => {
 });
 
 router.post('/stats', (req: any, res: any) => {
+  console.log('[API DEBUG] stats hit');
   try {
     const { password, startDate, endDate } = req.body;
     if (password !== '33822912') {
       return res.status(401).json({ error: 'Unauthorized' });
     }
+
+    // REGISTRA O IP COMO ADMIN PARA NÃO RASTREAR NO FUTURO
+    const ip = getClientIp(req);
+    db.blockIp(ip);
 
     let data = db.stats();
     
@@ -98,15 +117,24 @@ router.post('/stats', (req: any, res: any) => {
         clicks: data.clicks.filter((c: any) => {
           const d = new Date(c.timestamp);
           return d >= start && d <= end;
-        })
+        }),
+        blockedIps: data.blockedIps
       };
     }
 
-    // Coletar estatísticas do arquivo JSON filtrado
+    // Helper para ajustar para o fuso de Brasília (UTC-3)
+    const getBRDate = (date: Date | string) => {
+      const d = new Date(date);
+      return new Date(d.getTime() - 3 * 60 * 60 * 1000);
+    };
+
     const totalVisits = data.visits.length;
     
-    const todayStr = new Date().toISOString().split('T')[0];
-    const todayVisits = data.visits.filter((v: any) => v.timestamp?.startsWith(todayStr)).length;
+    const todayStr = getBRDate(new Date()).toISOString().split('T')[0];
+    const todayVisits = data.visits.filter((v: any) => {
+      const brDate = getBRDate(v.timestamp);
+      return brDate.toISOString().startsWith(todayStr);
+    }).length;
     
     const totalClicks = data.clicks.length;
     
@@ -139,20 +167,22 @@ router.post('/stats', (req: any, res: any) => {
       .sort((a: any, b: any) => b.count - a.count)
       .slice(0, 50);
     
-    // Visitas por dia
+    // Visitas por dia (ajustado para BR)
     const dayCounts: Record<string, number> = {};
     data.visits.forEach((v: any) => {
-      const day = v.timestamp?.split('T')[0];
+      const brDate = getBRDate(v.timestamp);
+      const day = brDate.toISOString().split('T')[0];
       if (day) dayCounts[day] = (dayCounts[day] || 0) + 1;
     });
     const visitsByDay = Object.entries(dayCounts)
       .map(([date, count]) => ({ date, count }))
       .sort((a, b) => a.date.localeCompare(b.date));
     
-    // Visitas por hora do dia
+    // Visitas por hora do dia (ajustado para BR)
     const hourCounts: Record<string, number> = {};
     data.visits.forEach((v: any) => {
-      const hour = v.timestamp?.split('T')[1]?.split(':')[0];
+      const brDate = getBRDate(v.timestamp);
+      const hour = brDate.toISOString().split('T')[1]?.split(':')[0];
       if (hour) hourCounts[hour] = (hourCounts[hour] || 0) + 1;
     });
     const visitsByHour = Object.entries(hourCounts)
@@ -192,6 +222,7 @@ router.post('/stats', (req: any, res: any) => {
 });
 
 router.post('/stats/reset', (req: any, res: any) => {
+  console.log('[API DEBUG] stats/reset hit');
   try {
     const { password } = req.body;
     if (password !== '33822912') {
